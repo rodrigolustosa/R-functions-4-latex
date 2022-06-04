@@ -43,3 +43,13 @@ Inside `text.txt` now you will find:
 ```
 
 With the `horizontal_lines` parameter, you can also draw horizontal lines in your table. Setting it to `TRUE` will make a horizontal line above and bellow the header and bellow all lines. There is also compatibility with the *booktabs* Latex package. Setting `booktabs_package` to `TRUE` will change all `\hline` text to `\topruler`, `\midruler` and `\bottomruler`, depending on its position. 
+
+#### Future features
+- [X] compatibility with *siunitx* Latex package (Numbers format)
+- [X] Horizontal lines
+- [X] compatibility with *booktabs* Latex package (Horizontal lines)
+- [ ] Horizontal lines in selected places
+- [ ] Colored cells (lines and/or columns)
+- [ ] Divide a large `data.frame` in different table environments
+- [ ] Repeated text cells in a row are merged into a single cell (with `\multicolumn{cols}{pos}{text}`)
+- [ ] Repeated text cells in a column are merged into a single cell (with `\multirow{number of rows}{width or *}{text}` from *multirow* Latex package)
