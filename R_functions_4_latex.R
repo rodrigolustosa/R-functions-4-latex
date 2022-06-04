@@ -10,7 +10,8 @@
 # you can open the file and just copy and paste in LaTeX
 # R packages used: stringr
 write_latexTable <- function(x,file,caption="",pos="htbp",align="c",label="tab:",
-                             centering = TRUE, siunitx_package = FALSE){
+                             centering = TRUE, horizontal_lines = FALSE,
+                             siunitx_package = FALSE, booktabs_package = FALSE){
   # inner functions
   make_latexTable_line <- function(raw_line){
     final_line <- paste(raw_line,collapse = " & ")
@@ -41,7 +42,7 @@ write_latexTable <- function(x,file,caption="",pos="htbp",align="c",label="tab:"
     # base
     tblr_string_begin <- "\\begin{tabular}"
     # correct number of columns
-    n_given <- str_count(align)
+    n_given <- stringr::str_count(align)
     if(n_given == 1)
       align <- paste(rep(align,n_col),collapse = "")
     # add info given by user
@@ -72,7 +73,8 @@ write_latexTable <- function(x,file,caption="",pos="htbp",align="c",label="tab:"
     # write lines
     writeLines(tblr_string_end,con)
   }
-  wrt_tabular <- function(con,x,align,siunitx_package){
+  wrt_tabular <- function(con,x,align,horizontal_lines,
+                          siunitx_package,booktabs_package){
     # coersing a possible tibble to a dataframe
     x <- data.frame(x)
     
@@ -92,14 +94,29 @@ write_latexTable <- function(x,file,caption="",pos="htbp",align="c",label="tab:"
           # makes numbers format more pleasant
           x[,j] <- paste("\\num{",x[,j],"}",sep="")
     
+    if(booktabs_package){
+      txt_top_line <- "\t\t\t\\toprule"
+      txt_mid_line <- "\t\t\t\\midrule"
+      txt_bot_line <- "\t\t\t\\bottomrule"
+    } else {
+      txt_top_line <- "\t\t\t\\hline"
+      txt_mid_line <- txt_top_line
+      txt_bot_line <- txt_top_line
+    }
     # write header and lines
     header_save <- make_latexTable_line(header)
+    if(horizontal_lines)
+      writeLines(txt_top_line,con) 
     writeLines(header_save,con)
+    if(horizontal_lines)
+      writeLines(txt_mid_line,con)
     for(i in 1:n){
       line <- x[i,]
       line_save <- make_latexTable_line(line)
       writeLines(line_save,con)
     }
+    if(horizontal_lines)
+      writeLines(txt_bot_line,con)
     
     # end tabular environment
     wrt_tblr_env_end(con)
@@ -110,7 +127,8 @@ write_latexTable <- function(x,file,caption="",pos="htbp",align="c",label="tab:"
   # start table environment
   wrt_tbl_env_start(con,pos,caption,centering)
   # write tabular
-  wrt_tabular(con,x,align,siunitx_package)
+  wrt_tabular(con,x,align,horizontal_lines,
+              siunitx_package,booktabs_package)
   # end table environment
   wrt_tbl_env_end(con,label)
   # close file

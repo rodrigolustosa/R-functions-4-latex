@@ -25,7 +25,7 @@ Inside `text.txt` you will find:
 
 You can pass more information to `write_latexTable` like caption, table position in text, columns alignment and table label. For example:
 ```
-write_latexTable(mtcars[1:3,1:5], caption="Some information", pos="h", align="r|cccc", label="tab:example", "test.txt")
+write_latexTable(mtcars[1:3,1:5], "test.txt", caption="Some information", pos="h", align="r|cccc", label="tab:example")
 ```
 Inside `text.txt` now you will find:
 ```
@@ -42,4 +42,4 @@ Inside `text.txt` now you will find:
 	\end{table}
 ```
 
-
+With the `horizontal_lines` parameter, you can also draw horizontal lines in your table. Setting it to `TRUE` will make a horizontal line above and bellow the header and bellow all lines. There is also compatibility with the *booktabs* Latex package. Setting `booktabs_package` to `TRUE` will change all `\hline` text to `\topruler`, `\midruler` and `\bottomruler`, depending on its position. 
