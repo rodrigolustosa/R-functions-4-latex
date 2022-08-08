@@ -48,6 +48,7 @@ With the `horizontal_lines` parameter, you can also draw horizontal lines in you
 - [X] compatibility with *siunitx* Latex package (Numbers format)
 - [X] Horizontal lines
 - [X] compatibility with *booktabs* Latex package (Horizontal lines)
+- [X] selected columns can be used as uncertainty in other columns (uses *siunitx* Latex package).
 - [ ] Horizontal lines in selected places
 - [ ] Colored cells (lines and/or columns)
 - [ ] Divide a large `data.frame` in different table environments
