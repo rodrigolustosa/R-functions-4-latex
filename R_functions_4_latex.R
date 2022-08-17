@@ -114,12 +114,13 @@ write_latexTable <- function(x,file,caption="",pos="htbp",align="c",label="tab:"
             digits <- ifelse(digits<0,0,digits) + nsmall - nzeros
           } else{
             error_text <- ""
-            nsmall = 0L
-            digits = NA
+            nsmall = rep(0L,n)
+            digits = NULL
           }
           # \num{} is a command from siunitx package which
           # makes numbers format more pleasant
           x_txt <- vector("character",n)
+          
           for(i in 1:n)
             x_txt[i] <- format(as.list(x[i,j]),scientific=F,
                                nsmall=nsmall[i],digits=digits[i])
