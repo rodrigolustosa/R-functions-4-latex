@@ -114,8 +114,10 @@ write_latexTable <- function(x,file,caption="",pos="htbp",align="c",label="tab:"
             digits <- ifelse(digits<0,0,digits) + nsmall - nzeros 
             # format function doesn't accept digits = 0
             # for the future: find a solution that doesn't change the main data x
-            x[digits == 0,j] <- round(x[digits == 0,j], nsmall)
-            digits[digits == 0] <- 1
+            if(any(digits == 0)){
+              x[digits == 0,j] <- round(x[digits == 0,j], nsmall[digits == 0])
+              digits[digits == 0] <- digits[digits == 0] + 1
+            }
           } else{
             error_text <- ""
             nsmall = rep(0L,n)
