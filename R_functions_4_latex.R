@@ -12,7 +12,8 @@
 write_latexTable <- function(x,file,caption="",pos="htbp",align="c",label="tab:",
                              centering = TRUE, horizontal_lines = FALSE,
                              siunitx_package = FALSE, booktabs_package = FALSE,
-                             cols_num=NULL,cols_error=NULL,error_digits=2){
+                             cols_num=NULL,cols_error=NULL,error_digits=2,
+                             scientific = F){
   # checks
   if(length(cols_num) != length(cols_error))
     stop("cols_error and cols_num should have same length")
@@ -81,7 +82,8 @@ write_latexTable <- function(x,file,caption="",pos="htbp",align="c",label="tab:"
   }
   wrt_tabular <- function(con,x,align,horizontal_lines,
                           siunitx_package,booktabs_package,
-                          cols_num,cols_error,error_digits){
+                          cols_num,cols_error,error_digits,
+                          scientific){
     # coersing a possible tibble to a dataframe
     x <- data.frame(x)
     
@@ -97,8 +99,10 @@ write_latexTable <- function(x,file,caption="",pos="htbp",align="c",label="tab:"
     
     # add commands from siunitx package
     if(siunitx_package)
+      k_num <- 0
       for(j in cols_save)
         if(class(x[,j]) == "numeric"){
+          k_num <- k_num + 1
           if(j %in% cols_num){
             k <- cols_error[j == cols_num]
             error_text <- paste("\\pm",format(as.list(x[,k]),scientific=F,
@@ -123,12 +127,16 @@ write_latexTable <- function(x,file,caption="",pos="htbp",align="c",label="tab:"
             nsmall = rep(0L,n)
             digits = NULL
           }
+          # should numbers be in scientific notation?
+          if(length(scientific) == 1)
+            sc <- scientific
+          else
+            sc <- scientific[k_num]
           # \num{} is a command from siunitx package which
           # makes numbers format more pleasant
           x_txt <- vector("character",n)
-          
           for(i in 1:n)
-            x_txt[i] <- format(as.list(x[i,j]),scientific=F,
+            x_txt[i] <- format(as.list(x[i,j]),scientific=sc,
                                nsmall=nsmall[i],digits=digits[i])
           x[,j] <- paste("\\num{",x_txt,error_text,"}",sep="")
         }
@@ -168,7 +176,8 @@ write_latexTable <- function(x,file,caption="",pos="htbp",align="c",label="tab:"
   # write tabular
   wrt_tabular(con,x,align,horizontal_lines,
               siunitx_package,booktabs_package,
-              cols_num,cols_error,error_digits)
+              cols_num,cols_error,error_digits,
+              scientific)
   # end table environment
   wrt_tbl_env_end(con,label)
   # close file
